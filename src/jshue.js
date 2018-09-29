@@ -19,7 +19,7 @@
  * @param {Function} Promise promise dependency
  * @return {Object} instance
  */
-var jsHueAPI = (fetch, Response, JSON, Promise) => {
+var jsHueAPI = function(fetch, Response, JSON, Promise) {
     /**
      * Performs fetch request.
      *
@@ -139,7 +139,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
         body: JSON.parse(data.body)
     })));
 
-    return {
+    
         /* ================================================== */
         /* Portal API                                         */
         /* ================================================== */
@@ -150,7 +150,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
          * @method discover
          * @return {Promise} promise resolving to response data object
          */
-        discover: _get.bind(null, 'https://www.meethue.com/api/nupnp'),
+        this.discover = _get.bind(null, 'https://www.meethue.com/api/nupnp')
         /**
          * Creates bridge object (jsHueBridge).
          *
@@ -158,14 +158,14 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
          * @param {String} ip ip address or hostname of bridge
          * @return {Object} bridge object
          */
-        bridge: ip => {
+        this.bridge = ip => {
             /**
              * @class jsHueBridge
              */
             var _baseUrl = `http://${ip}`,
                 _bridgeUrl = `${_baseUrl}/api`;
 
-            return {
+            
                 /**
                  * Creates new user in bridge whitelist.
                  *
@@ -173,7 +173,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                  * @param {String} type device type
                  * @return {Promise} promise resolving to response data object
                  */
-                createUser: type => _post(_bridgeUrl, { devicetype: type }),
+                this.createUser = type => _post(_bridgeUrl, { devicetype: type })
                 /**
                  * Creates user object (jsHueUser).
                  *
@@ -181,7 +181,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                  * @param {String} username username
                  * @return {Object} user object
                  */
-                user: username => {
+                this.user = username => {
                     /**
                      * @class jsHueUser
                      */
@@ -206,7 +206,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                         _ruleUrl = _objectUrl(_rulesUrl),
                         _linkUrl = _objectUrl(_linksUrl);
 
-                    return {
+                    
                         /* ================================================== */
                         /* Capabilities API                                   */
                         /* ================================================== */
@@ -217,7 +217,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getCapabilities
                          * @return {Promise} promise resolving to response data object
                          */
-                        getCapabilities: _get.bind(null, _capabilitiesUrl),
+                        this.getCapabilities = _get.bind(null, _capabilitiesUrl)
 
                         /* ================================================== */
                         /* Configuration API                                  */
@@ -230,14 +230,14 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {String} username username
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteUser: _parametrize(_delete, username => `${_configUrl}/whitelist/${username}`),
+                        this.deleteUser = _parametrize(_delete, username => `${_configUrl}/whitelist/${username}`)
                         /**
                          * Gets bridge configuration.
                          *
                          * @method getConfig
                          * @return {Promise} promise resolving to response data object
                          */
-                        getConfig: _get.bind(null, _configUrl),
+                        this.getConfig = _get.bind(null, _configUrl)
                         /**
                          * Sets bridge configuration.
                          *
@@ -245,14 +245,14 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data config data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setConfig: _put.bind(null, _configUrl),
+                        this.setConfig = _put.bind(null, _configUrl)
                         /**
                          * Gets bridge full state.
                          *
                          * @method getFullState
                          * @return {Promise} promise resolving to response data object
                          */
-                        getFullState: _get.bind(null, _userUrl),
+                        this.getFullState = _get.bind(null, _userUrl)
 
                         /* ================================================== */
                         /* Lights API                                         */
@@ -264,14 +264,14 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getLights
                          * @return {Promise} promise resolving to response data object
                          */
-                        getLights: _get.bind(null, _lightsUrl),
+                        this.getLights = _get.bind(null, _lightsUrl)
                         /**
                          * Gets new lights.
                          *
                          * @method getNewLights
                          * @return {Promise} promise resolving to response data object
                          */
-                        getNewLights: _get.bind(null, `${_lightsUrl}/new`),
+                        this.getNewLights = _get.bind(null, `${_lightsUrl}/new`)
                         /**
                          * Searches for new lights.
                          *
@@ -279,7 +279,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data data (optional)
                          * @return {Promise} promise resolving to response data object
                          */
-                        searchForNewLights: (data = null) => _post(_lightsUrl, data),
+                        this.searchForNewLights = (data = null) => _post(_lightsUrl, data)
                         /**
                          * Gets light attributes and state.
                          *
@@ -287,7 +287,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id light ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getLight: _parametrize(_get, _lightUrl),
+                        this.getLight = _parametrize(_get, _lightUrl)
                         /**
                          * Sets light attributes.
                          *
@@ -296,7 +296,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data attribute data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setLight: _parametrize(_put, _lightUrl),
+                        this.setLight = _parametrize(_put, _lightUrl)
                         /**
                          * Sets light state.
                          *
@@ -305,7 +305,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data state data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setLightState: _parametrize(_put, id => `${_lightUrl(id)}/state`),
+                        this.setLightState = _parametrize(_put, id => `${_lightUrl(id)}/state`)
                         /**
                          * Deletes a light.
                          *
@@ -313,7 +313,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id light ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteLight: _parametrize(_delete, _lightUrl),
+                        this.deleteLight = _parametrize(_delete, _lightUrl)
 
                         /* ================================================== */
                         /* Groups API                                         */
@@ -325,7 +325,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getGroups
                          * @return {Promise} promise resolving to response data object
                          */
-                        getGroups: _get.bind(null, _groupsUrl),
+                        this.getGroups = _get.bind(null, _groupsUrl)
                         /**
                          * Creates a group.
                          *
@@ -333,7 +333,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data group data
                          * @return {Promise} promise resolving to response data object
                          */
-                        createGroup: _post.bind(null, _groupsUrl),
+                        this.createGroup = _post.bind(null, _groupsUrl)
                         /**
                          * Gets group attributes.
                          *
@@ -341,7 +341,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id group ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getGroup: _parametrize(_get, _groupUrl),
+                        this.getGroup = _parametrize(_get, _groupUrl)
                         /**
                          * Sets group attributes.
                          *
@@ -350,7 +350,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data attribute data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setGroup: _parametrize(_put, _groupUrl),
+                        this.setGroup = _parametrize(_put, _groupUrl)
                         /**
                          * Sets group state.
                          *
@@ -359,7 +359,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data state data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setGroupState: _parametrize(_put, id => `${_groupUrl(id)}/action`),
+                        this.setGroupState = _parametrize(_put, id => `${_groupUrl(id)}/action`)
                         /**
                          * Deletes a group.
                          *
@@ -367,7 +367,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id group ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteGroup: _parametrize(_delete, _groupUrl),
+                        this.deleteGroup = _parametrize(_delete, _groupUrl)
 
                         /* ================================================== */
                         /* Schedules API                                      */
@@ -379,7 +379,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getSchedules
                          * @return {Promise} promise resolving to response data object
                          */
-                        getSchedules: _get.bind(null, _schedulesUrl),
+                        this.getSchedules = _get.bind(null, _schedulesUrl)
                         /**
                          * Creates a schedule.
                          *
@@ -387,7 +387,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data schedule data
                          * @return {Promise} promise resolving to response data object
                          */
-                        createSchedule: _post.bind(null, _schedulesUrl),
+                        this.createSchedule = _post.bind(null, _schedulesUrl)
                         /**
                          * Gets schedule attributes.
                          *
@@ -395,7 +395,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id schedule ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getSchedule: _parametrize(_get, _scheduleUrl),
+                        this.getSchedule = _parametrize(_get, _scheduleUrl)
                         /**
                          * Sets schedule attributes.
                          *
@@ -404,7 +404,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data schedule data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setSchedule: _parametrize(_put, _scheduleUrl),
+                        this.setSchedule = _parametrize(_put, _scheduleUrl)
                         /**
                          * Deletes a schedule.
                          *
@@ -412,7 +412,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id schedule ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteSchedule: _parametrize(_delete, _scheduleUrl),
+                        this.deleteSchedule = _parametrize(_delete, _scheduleUrl)
                         /**
                          * Creates schedule command generator object.
                          *
@@ -420,8 +420,8 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method scheduleCommandGenerator
                          * @return {Object} schedule command generator
                          */
-                        scheduleCommandGenerator: () =>
-                            jsHueAPI(_echo(_baseUrl), Response, JSON, Promise).bridge(ip).user(username),
+                        this.scheduleCommandGenerator = () =>
+                            jsHueAPI(_echo(_baseUrl), Response, JSON, Promise).bridge(ip).user(username)
 
                         /* ================================================== */
                         /* Scenes API                                         */
@@ -433,7 +433,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getScenes
                          * @return {Promise} promise resolving to response data object
                          */
-                        getScenes: _get.bind(null, _scenesUrl),
+                        this.getScenes = _get.bind(null, _scenesUrl)
                         /**
                          * Creates a scene.
                          *
@@ -441,7 +441,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data scene data
                          * @return {Promise} promise resolving to response data object
                          */
-                        createScene: _post.bind(null, _scenesUrl),
+                        this.createScene = _post.bind(null, _scenesUrl)
                         /**
                          * Gets scene attributes.
                          *
@@ -449,7 +449,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {String} id scene ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getScene: _parametrize(_get, _sceneUrl),
+                        this.getScene = _parametrize(_get, _sceneUrl)
                         /**
                          * Sets scene attributes.
                          *
@@ -458,7 +458,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data scene data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setScene: _parametrize(_put, _sceneUrl),
+                        this.setScene = _parametrize(_put, _sceneUrl)
                         /**
                          * Sets the state of a light in a scene.
                          *
@@ -468,8 +468,8 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data scene light state data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setSceneLightState: (sceneId, lightId, data) =>
-                            _put(`${_sceneUrl(sceneId)}/lightstates/${lightId}`, data),
+                        this.setSceneLightState = (sceneId, lightId, data) =>
+                            _put(`${_sceneUrl(sceneId)}/lightstates/${lightId}`, data)
                         /**
                          * Deletes a scene.
                          *
@@ -477,7 +477,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {String} id scene ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteScene: _parametrize(_delete, _sceneUrl),
+                        this.deleteScene = _parametrize(_delete, _sceneUrl)
 
                         /* ================================================== */
                         /* Sensors API                                        */
@@ -489,7 +489,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getSensors
                          * @return {Promise} promise resolving to response data object
                          */
-                        getSensors: _get.bind(null, _sensorsUrl),
+                        this.getSensors = _get.bind(null, _sensorsUrl)
                         /**
                          * Creates a sensor.
                          *
@@ -497,21 +497,21 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data sensor data
                          * @return {Promise} promise resolving to response data object
                          */
-                        createSensor: _post.bind(null, _sensorsUrl),
+                        this.createSensor = _post.bind(null, _sensorsUrl)
                         /**
                          * Searches for new sensors.
                          *
                          * @method searchForNewSensors
                          * @return {Promise} promise resolving to response data object
                          */
-                        searchForNewSensors: _post.bind(null, _sensorsUrl, null),
+                        this.searchForNewSensors = _post.bind(null, _sensorsUrl, null)
                         /**
                          * Gets new sensors since last search.
                          *
                          * @method getNewSensors
                          * @return {Promise} promise resolving to response data object
                          */
-                        getNewSensors: _get.bind(null, `${_sensorsUrl}/new`),
+                        this.getNewSensors = _get.bind(null, `${_sensorsUrl}/new`)
                         /**
                          * Gets sensor attributes and state.
                          *
@@ -519,7 +519,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id sensor ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getSensor: _parametrize(_get, _sensorUrl),
+                        this.getSensor = _parametrize(_get, _sensorUrl)
                         /**
                          * Sets sensor attributes.
                          *
@@ -528,7 +528,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data attribute data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setSensor: _parametrize(_put, _sensorUrl),
+                        this.setSensor = _parametrize(_put, _sensorUrl)
                         /**
                          * Sets sensor configuration.
                          *
@@ -537,7 +537,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data config data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setSensorConfig: _parametrize(_put, id => `${_sensorUrl(id)}/config`),
+                        this.setSensorConfig = _parametrize(_put, id => `${_sensorUrl(id)}/config`)
                         /**
                          * Sets sensor state.
                          *
@@ -546,7 +546,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data state data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setSensorState: _parametrize(_put, id => `${_sensorUrl(id)}/state`),
+                        this.setSensorState = _parametrize(_put, id => `${_sensorUrl(id)}/state`)
                         /**
                          * Deletes a sensor.
                          *
@@ -556,7 +556,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id sensor ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteSensor: _parametrize(_delete, _sensorUrl),
+                        this.deleteSensor = _parametrize(_delete, _sensorUrl)
 
                         /* ================================================== */
                         /* Rules API                                          */
@@ -568,7 +568,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getRules
                          * @return {Promise} promise resolving to response data object
                          */
-                        getRules: _get.bind(null, _rulesUrl),
+                        this.getRules = _get.bind(null, _rulesUrl)
                         /**
                          * Creates a rule.
                          *
@@ -576,7 +576,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data rule data
                          * @return {Promise} promise resolving to response data object
                          */
-                        createRule: _post.bind(null, _rulesUrl),
+                        this.createRule = _post.bind(null, _rulesUrl)
                         /**
                          * Gets rule attributes.
                          *
@@ -584,7 +584,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id rule ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getRule: _parametrize(_get, _ruleUrl),
+                        this.getRule = _parametrize(_get, _ruleUrl)
                         /**
                          * Sets rule attributes.
                          *
@@ -593,7 +593,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data rule data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setRule: _parametrize(_put, _ruleUrl),
+                        this.setRule = _parametrize(_put, _ruleUrl)
                         /**
                          * Deletes a rule.
                          *
@@ -601,7 +601,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id rule ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteRule: _parametrize(_delete, _ruleUrl),
+                        this.deleteRule = _parametrize(_delete, _ruleUrl)
                         /**
                          * Creates rule action generator object.
                          *
@@ -609,8 +609,8 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method ruleActionGenerator
                          * @return {Object} rule action generator object
                          */
-                        ruleActionGenerator: () =>
-                            jsHueAPI(_echo(_userUrl), Response, JSON, Promise).bridge(ip).user(username),
+                        this.ruleActionGenerator = () =>
+                            jsHueAPI(_echo(_userUrl), Response, JSON, Promise).bridge(ip).user(username)
 
                         /* ================================================== */
                         /* Resourcelinks API                                  */
@@ -622,7 +622,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @method getResourceLinks
                          * @return {Promise} promise resolving to response data object
                          */
-                        getResourceLinks: _get.bind(null, _linksUrl),
+                        this.getResourceLinks = _get.bind(null, _linksUrl)
                         /**
                          * Creates a resourcelink.
                          *
@@ -630,7 +630,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data resourcelink data
                          * @return {Promise} promise resolving to response data object
                          */
-                        createResourceLink: _post.bind(null, _linksUrl),
+                        this.createResourceLink = _post.bind(null, _linksUrl)
                         /**
                          * Gets resourcelink attributes.
                          *
@@ -638,7 +638,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id resourcelink ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        getResourceLink: _parametrize(_get, _linkUrl),
+                        this.getResourceLink = _parametrize(_get, _linkUrl)
                         /**
                          * Sets resourcelink attributes.
                          *
@@ -647,7 +647,7 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Object} data resourcelink data
                          * @return {Promise} promise resolving to response data object
                          */
-                        setResourceLink: _parametrize(_put, _linkUrl),
+                        this.setResourceLink = _parametrize(_put, _linkUrl)
                         /**
                          * Deletes a resourcelink.
                          *
@@ -655,12 +655,12 @@ var jsHueAPI = (fetch, Response, JSON, Promise) => {
                          * @param {Number} id resourcelink ID
                          * @return {Promise} promise resolving to response data object
                          */
-                        deleteResourceLink: _parametrize(_delete, _linkUrl)
+                        this.deleteResourceLink = _parametrize(_delete, _linkUrl)
+                        return this;
                     };
-                }
-            };
-        }
+                    return this;
     };
+    return this;
 };
 
 if(typeof fetch !== 'undefined' && typeof Response !== 'undefined'
@@ -673,7 +673,7 @@ if(typeof fetch !== 'undefined' && typeof Response !== 'undefined'
      * @constructor
      * @return {Object} instance
      */
-    var jsHue = jsHueAPI.bind(null, fetch, Response, JSON, Promise);
+    var jsHue = jsHueAPI.bind({}, fetch, Response, JSON, Promise);
 
     // Try to export to be used as a module via a bundler
     if(typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
